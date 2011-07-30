@@ -1,0 +1,14 @@
+SET(CMAKE_SYSTEM_NAME Windows)
+SET(CMAKE_C_COMPILER   i486-mingw32-gcc)
+
+SET(CMAKE_RC_COMPILER  i486-mingw32-gcc)
+
+SET(CMAKE_CXX_COMPILER i486-mingw32-g++)
+
+# Define paths to search for libraries
+SET(CMAKE_FIND_ROOT_PATH /usr/i486-mingw32/)
+SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+
+# Don't search in native paths, just the specified root paths
+SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)

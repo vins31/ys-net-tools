@@ -1,11 +1,9 @@
 #include "ysclient.h"
 #include "ys_proto/serialization/includeAll.h"
-#include "ys_proto/debug.h"
-#include "ys_proto/apps/activity_message.h"
+//#include "ys_proto/debug.h"
+#include "activity_message.h"
 
-//#include "readPoly.h"
-
-//#include "xmlLog.h"
+#include <pthread.h>
 
 
 

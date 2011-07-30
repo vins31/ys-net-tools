@@ -1,0 +1,2 @@
+cmake_clean
+cmake -DCMAKE_TOOLCHAIN_FILE=toolchain_win.cmake
