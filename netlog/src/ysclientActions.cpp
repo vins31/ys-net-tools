@@ -164,7 +164,7 @@ int YSclient::aground(tground* ground)
     else
     {
         printf("PLAYERJOIN %s %s type: %d iff: %d id:%d\n", ground->name2, ground->name, ground->type, ground->iff, ground->id);
-        //xmlLog->log() << "<pilotjoin id='"<< ground->id << "' name='" << ground->name << "' name2='" <<  ground->name2 << "' iff='" << ground->iff << "' />" << endl;
+        xmlLog->log() << "<pilotjoin id='"<< ground->id << "' name='" << ground->name << "' name2='" <<  ground->name2 << "' iff='" << ground->iff << "' />" << endl;
         ack.id=0;
 //        racers[ground->id] = new Racer(ground->name2, ground->name, 1, cp);
     }
