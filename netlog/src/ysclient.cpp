@@ -31,7 +31,6 @@ void YSclient::connect()
         s.sendsYS(packtlogin(&login),0);
         pthread_t thread_activity_message;
         pthread_create(&thread_activity_message, NULL, send_activity_message, (void *)&s);
-
         while (1)
         {
             int size = s.recvsYS();

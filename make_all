@@ -1,0 +1,7 @@
+cmake_clean
+cmake . -G "Unix Makefiles"
+make
+./build32bits
+make
+./buildwin32
+make

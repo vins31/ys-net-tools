@@ -1,0 +1,31 @@
+echo " Copy the libs"
+cp ../ys_proto/lib/*.so builds/lib
+cp ../ys_proto/lib/*.dll builds
+cp sndmsg/libgcc*.dll builds
+cp sndmsg/libstdc++-6.dll builds 
+
+
+echo " Copy the binaries"
+cp sndmsg/ys-sndmsg* builds
+cp netlog/netlog* builds
+
+
+
+echo " Create the archives"
+
+echo "     ys-sndmsg"
+cp sndmsg/README.txt builds/
+tar czvf builds/ys-sndmsgWin32.tar.gz builds/ys-sndmsg.exe builds/*.dll builds/README.txt
+tar czvf builds/ys-sndmsg.tar.gz builds/ys-sndmsg builds/lib/lib_ys_proto.so builds/README.txt
+
+tar czvf builds/ys-sndmsg32.tar.gz builds/ys-sndmsg32 builds/lib/lib_ys_proto32.so builds/README.txt
+
+
+echo "     ys-netlog"
+tar czvf builds/ys-netlogWin32.tar.gz builds/ys-sndmsg.exe builds/*.dll builds/README.txt
+
+tar czvf builds/ys-netlog.tar.gz builds/netlog builds/lib/lib_ys_proto.so builds/README.txt
+
+tar czvf builds/ys-netlog32.tar.gz builds/netlog32 builds/lib/lib_ys_proto32.so builds/README.txt
+
+
