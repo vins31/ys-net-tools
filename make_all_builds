@@ -1,0 +1,10 @@
+cd ~/Projects/cpp/ys_proto
+~/Projects/cpp/ys-net-tools/make_all
+
+cd ../ys-net-tools/sndmsg/ 
+~/Projects/cpp/ys-net-tools/make_all
+
+cd ../netlog
+~/Projects/cpp/ys-net-tools/make_all
+
+cd ..

@@ -1,0 +1,3 @@
+~/Projects/cpp/ys-net-tools/make_all_builds
+~/Projects/cpp/ys-net-tools/make_archives
+python2 ~/Projects/cpp/ys-net-tools/sndFTP.py

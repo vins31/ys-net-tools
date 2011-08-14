@@ -8,10 +8,12 @@ cp sndmsg/libstdc++-6.dll builds
 cp netlog/pthreadGC2.dll builds
 cp ysrace/midohiol.race ysrace/ysas.race builds
 
+
 echo " Copy the binaries"
 cp sndmsg/ys-sndmsg* builds
 cp netlog/netlog* builds
 cp ysrace/ysrace* builds
+
 
 
 echo " Create the archives"
@@ -39,3 +41,4 @@ tar czvf builds/ysraceWin32.tar.gz builds/ysrace.exe builds/*.dll builds/README.
 tar czvf builds/ysrace.tar.gz builds/ysrace builds/lib/lib_ys_proto.so builds/lib/lib_checkpoint_check.so builds/README.txt builds/midohiol.race ysas.race
 
 tar czvf builds/ysrace32.tar.gz builds/ysrace32 builds/lib/lib_ys_proto32.so builds/lib/lib_checkpoint_check32.so builds/README.txt builds/midohiol.race ysas.race
+

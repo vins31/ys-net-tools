@@ -1,11 +1,9 @@
 #include "ysclient.h"
 #include "ys_proto/serialization/includeAll.h"
-#include "ys_proto/debug.h"
-#include "ys_proto/apps/activity_message.h"
+//#include "ys_proto/debug.h"
+#include "activity_message.h"
 
-//#include "readPoly.h"
-
-//#include "xmlLog.h"
+#include <pthread.h>
 
 
 
@@ -33,7 +31,6 @@ void YSclient::connect()
         s.sendsYS(packtlogin(&login),0);
         pthread_t thread_activity_message;
         pthread_create(&thread_activity_message, NULL, send_activity_message, (void *)&s);
-
         while (1)
         {
             int size = s.recvsYS();

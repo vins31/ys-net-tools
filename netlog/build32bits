@@ -1,0 +1,3 @@
+cmake_clean
+cmake . -G "Unix Makefiles"  -DFORCE_CPU:STRING=32bits
+

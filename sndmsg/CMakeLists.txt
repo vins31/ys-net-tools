@@ -14,8 +14,6 @@ file(
 	source_files
 	src/*
 	include/*
-    #   ../../ys_proto/src/*
-    #../../ys_proto/include/*
 )
 
 #Déclaration de l'exécutable
@@ -24,7 +22,15 @@ add_executable(
 	${source_files}
 )
 
-target_link_libraries(
-        ys-sndmsg
-        _ys_proto
-)
+if (FORCE_CPU STREQUAL "32bits")
+    add_definitions(                        -m32)
+    set(CMAKE_EXE_LINKER_FLAGS                "${CMAKE_EXE_LINKER_FLAGS} -m32")
+    set(CMAKE_SHARED_LIBRARY_C_FLAGS        "${CMAKE_SHARED_LIBRARY_C_FLAGS} -m32")
+    set(CMAKE_SHARED_LIBRARY_CXX_FLAGS "${CMAKE_SHARED_LIBRARY_CXX_FLAGS} -m32")
+
+    target_link_libraries(ys-sndmsg _ys_proto32)
+    set_target_properties(ys-sndmsg PROPERTIES OUTPUT_NAME "ys-sndmsg32")
+else (FORCE_CPU STREQUAL "32bits")
+    target_link_libraries(ys-sndmsg _ys_proto)
+endif (FORCE_CPU STREQUAL "32bits") 
+

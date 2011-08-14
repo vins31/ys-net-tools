@@ -1,4 +1,4 @@
-#include "ys_proto/apps/activity_message.h"
+#include "activity_message.h"
 #include "ys_proto/serialization/header.h"
 #include "ys_proto/sockets/socketYS.h"
 
