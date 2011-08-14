@@ -5,6 +5,7 @@
 #include <math.h>
 
 #include <time.h>
+//#pragma pack(2)
 
 using namespace std;
 
@@ -38,7 +39,7 @@ int YSclient::aysversion(tint* inte)
 
 int YSclient::amissileOpt(tint* inte)
 {
-    printf("Missile option: %d\n", inte->val);
+    //printf("Missile option: %d\n", inte->val);
     tacknowledge ack;
     ack.id = 10;
     ack.info = 0;
@@ -47,7 +48,7 @@ int YSclient::amissileOpt(tint* inte)
 
 int YSclient::aweaponOpt(tint* inte)
 {
-    printf("Weapon option: %d\n", inte->val);
+    //printf("Weapon option: %d\n", inte->val);
     tacknowledge ack;
     ack.id = 11;
     ack.info = 0;
@@ -56,7 +57,7 @@ int YSclient::aweaponOpt(tint* inte)
 
 int YSclient::ashowUserOpt(tint* inte)
 {
-    printf("Show user option: %d\n", inte->val);
+    //printf("Show user option: %d\n", inte->val);
     //tacknowledge ack;
     //ack.id = 11;
     //return s.sendsYS(packtacknowledge(&ack));
@@ -66,8 +67,8 @@ int YSclient::ashowUserOpt(tint* inte)
 
 int YSclient::aweather(tweather* weather)
 {
-    printf("Weather:\n");
-    printf("day: %d\noptions: %d\nvisib: %f\nwind: %f %f %f\n", weather->day, weather->options, weather->visibility, weather->windX, weather->windY, weather->windZ);
+    //printf("Weather:\n");
+    //printf("day: %d\noptions: %d\nvisib: %f\nwind: %f %f %f\n", weather->day, weather->options, weather->visibility, weather->windX, weather->windY, weather->windZ);
     //xmlLog->log() << "<weather day='" << weather->day << "' visibility='" << weather->visibility << "' windX='" << weather->windX << "' windY=" <<  weather->windY << "' windZ='" <<  weather->windZ << "' />" << endl;
     tacknowledge ack;
     ack.id = 4;
@@ -85,8 +86,8 @@ int YSclient::aendairlist()
 
 int YSclient::aairList(tairList* airList)
 {
-    printf("Nb aircraft %d\n", airList->nbOfAircraft);
-    printsarray(airList->aircraft, airList->nbOfAircraft);
+    //printf("Nb aircraft %d\n", airList->nbOfAircraft);
+    //printsarray(airList->aircraft, airList->nbOfAircraft);
     //BEWARE THE AIRCRAFT LIST DISEAPEAR AFTER THE free(buffer2), EVEN IF WE MAKE A COPY OF THE STRUCT BECAUSE WE USED A POINTER FOR airList.aircraft
     return s.sendsYS(packtairList(airList));
 }
@@ -94,7 +95,7 @@ int YSclient::aairList(tairList* airList)
 
 int YSclient::aairDisplayOption(tairDisplayOpt* airDisplayOpt)
 {
-    printf("Option: %s\n", airDisplayOpt->message);
+    //printf("Option: %s\n", airDisplayOpt->message);
     return s.sendsYS(packtairDisplayOpt(airDisplayOpt));
 }
 
@@ -106,34 +107,65 @@ int YSclient::amessage(tmessage* message)
     return 1;
 }
 
-int YSclient::aflight(tflight* flight)
+int YSclient::aflight(tflight* flight, tflight2* flight2)
 {
-    printf("ID: %d x: %f   z: %f   y: %f\n", flight->ID, flight->x, flight->z, flight->y);
-    float speed = 0.19438612860586*sqrt(flight->xSpeed * flight->xSpeed + flight->ySpeed * flight->ySpeed + flight->zSpeed * flight->zSpeed);
-    int d = racers[flight->ID]->check(flight->x, flight->z, flight->y, speed, time (NULL));
-    if (d == -1)
+//    printf("ID: %d x: %f   z: %f   y: %f\n", flight->ID, flight2->x, flight2->z, flight2->y);
+     map<int,Racer*>::iterator racer = racers.find(flight->ID);
+
+    if (racer != racers.end())
     {
-            cout  <<racers[flight->ID]->name() << " missed a check-point !" << endl;
+        if ( (abs(flight2->x) < 100000) && (abs(flight2->z) < 100000) && (abs(flight2->y) < 100000))
+        {
+            float speed = 0.19438612860586*sqrt(flight2->xSpeed * flight2->xSpeed + flight2->ySpeed * flight2->ySpeed + flight2->zSpeed * flight2->zSpeed);
+            int d = racers[flight->ID]->check(flight2->x, flight2->z, flight2->y, speed, time (NULL));
+//            cout << newracer->check(flight->x, flight->z, flight->y, speed, time (NULL)) << endl;
+            // FIXME: USE TRY/CATCH WITH DICO !!!
+            if (d == -1)
+            {
+                    cout  <<racers[flight->ID]->name() << " missed a check-point !" << endl;
+            }
+            else if (d == 2)
+            {
+                cout <<  racers[flight->ID]->name() << " finished the lap " << racers[flight->ID]->lapNumber()-1 << endl;
+            }
+            else if (d == 3)
+            {
+                tmessage* mess = (tmessage*)malloc(sizeof(*mess));
+                mess->u = 0;
+                mess->message = (char*)malloc(300);
+                sprintf (mess->message, "%s finished in %.2f s ; Top speed %d kt", racers[flight->ID]->name().c_str(), racers[flight->ID]->time(), racers[flight->ID]->topSpeed());
+                s.sendsYS(packtmessage(mess));
+                cout << racers[flight->ID]->name() << " finished the race in " <<  racers[flight->ID]->time() << "s ; Top speed: "<< racers[flight->ID]->topSpeed() << "kt" << endl;
+            }
+            if (d > 0)
+            {
+                printf ("check %d at time=%d\n", racers[flight->ID]->nextCP(), time(NULL));
+                tmessage* mess2 = (tmessage*)malloc(sizeof(*mess2));
+                mess2->u = 0;
+                mess2->message = (char*)malloc(200);
+                sprintf (mess2->message, "%s went trougth gate %d at %.2f kt", racers[flight->ID]->name().c_str(), racers[flight->ID]->nextCP(), speed);
+                s.sendsYS(packtmessage(mess2));
+                printf ("speed: %fkt  - time: %.0f\n", speed, time(NULL));
+                if ( (racers[flight->ID]->nextCP()) == 1 && (speed>200) )
+                {
+                    tmessage* mess3 = (tmessage*)malloc(sizeof(*mess3));
+                    mess3->u = 0;
+                    mess3->message = (char*)malloc(200);
+                    sprintf (mess3->message, "2s penalty for %s, you had to go below 200kt at the first gate!", racers[flight->ID]->name().c_str());
+                    s.sendsYS(packtmessage(mess3));
+                    printf("2s penalty!!\n");
+                }
+            }
+//            cout << clock() << endl;
+        }
     }
-    else if (d == 2)
+    else
     {
-        cout <<  racers[flight->ID]->name() << " finished the lap " << racers[flight->ID]->lapNumber()-1 << endl;
+        cout << "Unkown pilot" << flight->ID << endl;
     }
-    else if (d == 3)
-    {
-        tmessage* mess = (tmessage*)malloc(sizeof(*mess));
-        mess->u = 0;
-        mess->message = (char*)malloc(500);
-        sprintf (mess->message, "%s finished in %d s ; Top speed %d kt", racers[flight->ID]->name().c_str(), (int)racers[flight->ID]->time(), racers[flight->ID]->topSpeed());
-        s.sendsYS(packtmessage(mess));
-       cout << racers[flight->ID]->name() << " finished the race in " <<  racers[flight->ID]->time() << "s ; Top speed: "<< racers[flight->ID]->topSpeed() << "kt" << endl;
-    }
-//    if (d != 0)
-//    {
-//        printf ("check %d at %d\n", d, flight->stopWatch);
-//        printf ("speed: %f \n", speed);
-//    }
-    //cout << clock() << endl;
+
+
+
     //cout << flight->stopWatch << endl;
     return 1;
 }
@@ -156,17 +188,15 @@ int YSclient::aground(tground* ground)
     tacknowledge ack;
     if (ground->type == 65537)
     {
-        printf("GROUNDJOIN %s %s type: %d iff: %d id:%d gro_id %d\n", ground->name2, ground->name, ground->type, ground->iff, ground->id, ground->gro_id);
-        //xmlLog->log() << "<groundjoin id='"<< ground->id << "' name='" << ground->name << "' name2='" <<  ground->name2 << "' iff='" << ground->iff << "' groID='" << ground->gro_id << "' />" << endl;
+        //printf("GROUNDJOIN %s %s type: %d iff: %d id:%d gro_id %d\n", ground->name2, ground->name, ground->type, ground->iff, ground->id, ground->gro_id);
         ack.id = 1;
         //debugHex((char*)&ground, 180);
     }
     else
     {
         printf("PLAYERJOIN %s %s type: %d iff: %d id:%d\n", ground->name2, ground->name, ground->type, ground->iff, ground->id);
-        //xmlLog->log() << "<pilotjoin id='"<< ground->id << "' name='" << ground->name << "' name2='" <<  ground->name2 << "' iff='" << ground->iff << "' />" << endl;
         ack.id=0;
-//        racers[ground->id] = new Racer(ground->name2, ground->name, 1, cp);
+        racers[ground->id] = new Racer(ground->name2, ground->name, laps, cp);
     }
     ack.info = ground->id;
     return s.sendsYS(packtacknowledge(&ack));
@@ -180,6 +210,12 @@ int YSclient::aleft(tleft* left, int is_ground=0)
     {
         ack.id = 3;
         printf("GROUNDLEFT: %d has left %d.\n", left->id, left->u);
+        //~ tmessage* mess2 = (tmessage*)malloc(sizeof(*mess2));
+        //~ mess2->u = 0;
+        //~ mess2->message = (char*)malloc(200);
+        //~ sprintf (mess2->message, "Object %d was hit, 2s penalty?", left->id);
+        //~ s.sendsYS(packtmessage(mess2));
+        //~ printf("2s penalty for pylon hit!!\n");
         //xmlLog->log() << "<groundLeft id='"<< left->id <<"' />" << endl;
     }
     else

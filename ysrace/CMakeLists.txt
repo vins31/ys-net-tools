@@ -17,8 +17,6 @@ file(
 	source_files
 	src/*
 	include/*
-    #   ../../ys_proto/src/*
-    #../../ys_proto/include/*
 )
 
 #Déclaration de l'exécutable
@@ -27,9 +25,22 @@ add_executable(
 	${source_files}
 )
 
-target_link_libraries(
-        ysrace
-        _ys_proto
-        _checkpoint_check
-        pthread
-)
+
+if (FORCE_CPU STREQUAL "32bits")
+    add_definitions(                        -m32)
+    set(CMAKE_EXE_LINKER_FLAGS                "${CMAKE_EXE_LINKER_FLAGS} -m32")
+    set(CMAKE_SHARED_LIBRARY_C_FLAGS        "${CMAKE_SHARED_LIBRARY_C_FLAGS} -m32")
+    set(CMAKE_SHARED_LIBRARY_CXX_FLAGS "${CMAKE_SHARED_LIBRARY_CXX_FLAGS} -m32")
+
+    target_link_libraries(ysrace _ys_proto32 _checkpoint_check32 pthread)
+    set_target_properties(ysrace PROPERTIES OUTPUT_NAME "ysrace32")
+else (FORCE_CPU STREQUAL "32bits")
+    target_link_libraries(ysrace _ys_proto _checkpoint_check pthread) 
+endif (FORCE_CPU STREQUAL "32bits") 
+
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+   message("Doing the Windows version!") 
+   include_directories("/usr/i486-mingw32/include")
+   set (LIBS ${LIBS}pthread)
+   #target_link_libraries(ysrace pthread)
+endif (CMAKE_SYSTEM_NAME STREQUAL "Windows")
