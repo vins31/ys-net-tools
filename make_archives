@@ -1,14 +1,17 @@
 echo " Copy the libs"
 cp ../ys_proto/lib/*.so builds/lib
 cp ../ys_proto/lib/*.dll builds
+cp ../checkpoint_check/lib/*.so builds/lib
+cp ../checkpoint_check/lib/*.dll builds
 cp sndmsg/libgcc*.dll builds
 cp sndmsg/libstdc++-6.dll builds 
-
+cp netlog/pthreadGC2.dll builds
+cp ysrace/midohiol.race builds
 
 echo " Copy the binaries"
 cp sndmsg/ys-sndmsg* builds
 cp netlog/netlog* builds
-
+cp ysrace/ysrace* builds
 
 
 echo " Create the archives"
@@ -22,10 +25,17 @@ tar czvf builds/ys-sndmsg32.tar.gz builds/ys-sndmsg32 builds/lib/lib_ys_proto32.
 
 
 echo "     ys-netlog"
+cp netlog/README.txt builds/
 tar czvf builds/ys-netlogWin32.tar.gz builds/ys-sndmsg.exe builds/*.dll builds/README.txt
 
 tar czvf builds/ys-netlog.tar.gz builds/netlog builds/lib/lib_ys_proto.so builds/README.txt
 
 tar czvf builds/ys-netlog32.tar.gz builds/netlog32 builds/lib/lib_ys_proto32.so builds/README.txt
 
+echo "     ysrace"
+cp ysrace/README.txt builds/
+tar czvf builds/ysraceWin32.tar.gz builds/ysrace.exe builds/*.dll builds/README.txt builds/midohiol.race 
 
+tar czvf builds/ysrace.tar.gz builds/ysrace builds/lib/lib_ys_proto.so builds/lib/lib_checkpoint_check.so builds/README.txt builds/midohiol.race 
+
+tar czvf builds/ysrace32.tar.gz builds/ysrace32 builds/lib/lib_ys_proto32.so builds/lib/lib_checkpoint_check32.so builds/README.txt builds/midohiol.race 

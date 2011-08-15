@@ -1,4 +1,6 @@
-#include "ys_proto/apps/apps.h"
+//#include "ys_proto/apps/apps.h"
+#include "ysclient.h"
+
 #include "ys_proto/serialization/includeAll.h"
 
 #include <string.h>
@@ -9,12 +11,12 @@
 
 //TODO: WEATHER
 
-theader Apps::getheadbuffer(char* buffer)
+theader YSclient::getheadbuffer(char* buffer)
 {
     return unpacktheader(buffer);
 }
 
-int Apps::receivedmanager(char* buffer, theader headbuffer)
+int YSclient::receivedmanager(char* buffer, theader headbuffer)
 {
 
     int carryOn = 0;
@@ -63,11 +65,12 @@ int Apps::receivedmanager(char* buffer, theader headbuffer)
         {
             // flight data
             tflight flight;
+            tflight2 flight2;
             //debugHex(buffer, 22);
             //char input[50] = "i,i,s,f,f,f";
 //            display_unpack(input, buffer);
-            unpacktflight(buffer, headbuffer.size, &flight);
-            carryOn = aflight(&flight);
+            unpacktflight(buffer, headbuffer.size, &flight, &flight2);
+            carryOn = aflight(&flight, &flight2);
             break;
         }
         case 13:

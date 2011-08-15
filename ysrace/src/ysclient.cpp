@@ -1,32 +1,35 @@
 #include "ysclient.h"
 #include "ys_proto/serialization/includeAll.h"
-#include "ys_proto/debug.h"
+//#include "ys_proto/debug.h"
 #include "activity_message.h"
-#include "checkpoint_check/readPoly.h"
+//#include "checkpoint_check/readPoly.h"
+#include "checkpoint_check/Racer.h"
+#include <iostream>
 
+#include <pthread.h>
 
+using namespace std;
 
-
-
-YSclient::YSclient()
+YSclient::YSclient(char* checkpoints_file)
 {
-     cp = read_file((char*)"midohiol.race");
+     cp = read_file(checkpoints_file); //manque un new ?
+//     cout << *cp  << std::endl;
+//     Racer newracer("Vins", "f-16", 2, cp);
+//     cout << "Done!" << endl;
+//     cout << newracer << endl;
+//     Racer* newracer = new Racer(ground->name2, ground->name, 1, cp);
      //cout << *cp  << std::endl;
-  //  xmlLog = new XmlLog();
 
 }
 
 void YSclient::connect()
 {
-//    int res = s.connects((char *)"127.0.0.1",7915);
-    //int res = s.connects((char *)"192.168.56.1",7915);
-    int res = s.connects((char *)"192.168.1.2",7915);
-    //int res = s.connects((char *)"195.146.247.50",7915);
+    int res = s.connects((char *)"127.0.0.1",7915);
     if (res)
     {
         printf("Connected\n");
         tlogin login;
-        strcpy(login.username, "doing_tests");
+        strcpy(login.username, "ysrace");
         login.YSversion = 20110207;
         s.sendsYS(packtlogin(&login),0);
         pthread_t thread_activity_message;
@@ -56,7 +59,6 @@ void YSclient::connect()
         printf("Fin thread %d.", rest);
 
     }
-    //xmlLog->close();
 
 
 }

@@ -5,22 +5,27 @@
 #include <iostream>
 
 #include "ys_proto/sockets/socketYS.h"
-#include "ys_proto/apps/apps.h"
-//#include "output/xmlLog.h"
+
+//#include "ys_proto/apps/apps.h"  // and so:
+#include "ys_proto/types/includeAll.h"
+
 #include "checkpoint_check/Vec.h"
 #include "checkpoint_check/readPoly.h"
 #include "checkpoint_check/Racer.h"
 
-class YSclient : public Apps
+class YSclient //: public Apps
 {
     public:
-        YSclient();
+        YSclient(char* checkpoints_file);
         void connect();
 
     protected:
-//        XmlLog* xmlLog;
+        Racer* newracer;
         CheckPoints* cp;
         map<int, Racer*> racers;
+
+        theader getheadbuffer(char* buffer);
+        int receivedmanager(char* buffer, theader headbuffer);
 
     private:
         SocketYS s;
@@ -35,7 +40,7 @@ class YSclient : public Apps
         int aairList(tairList* airList);
         int aairDisplayOption(tairDisplayOpt* airDisplayOpt);
         int amessage(tmessage* message);
-        int aflight(tflight* flight);
+        int aflight(tflight* flight, tflight2* flight2);
         int adamage(tdamage* damage);
         int auserlist(tuserlist* userlist);
         int aground(tground* ground);

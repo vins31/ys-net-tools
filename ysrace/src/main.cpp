@@ -1,45 +1,24 @@
-#include <stdio.h>
-//#include <stdlib.h>
-#include <string.h>
-//#include <unistd.h>
-//#include <fstream>
-//#include <iostream>
-//#include <time.h>
-
 #include "ysclient.h"
-
-
-//active certains outils de debuggage (macros TRACE, etc).
-#ifdef _DEBUG
-#define DBG_PRINTF(a) printf a
-#else
-#define DBG_PRINTF(a)
-#endif
-
-
-//#include "tests.h"
-
-
-
+#include "checkpoint_check/readPoly.h"
+#include "checkpoint_check/Racer.h"
+#include <iostream>
+using namespace std;
 
 int main(int argc, char *argv[])
 {
-
-    #ifdef __linux
-    printf("Compiling on Linux\n\n");
-    // GCC defines: __linux ; __linux__ ; _gnu_linux__ ; linux ;
-    #else
-    printf("Compiling on Windows\n\n");
-    // VC++ defines _WIN32
-    #endif
+    CheckPoints* cp = read_file((char*)"cp1.txt");
+//    cout << *cp << endl;
 
 
-// ------------------- Tests ---------------
+    Racer racer("Vins", "f-16", 2, cp);
 
+    if (argc < 2)
+    {
+        printf("Wrong number of parameters.\n Usage: ysrace CHECKPOINTS_FILE.race");
+        return -1;
+    }
 
-
-
-    YSclient ysc;
+    YSclient ysc(argv[1]);
     ysc.connect();
 
 
