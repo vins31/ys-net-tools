@@ -120,6 +120,25 @@ int YSclient::aflight(tflight* flight, tflight2* flight2)
             int d = racers[flight->ID]->check(flight2->x, flight2->z, flight2->y, speed, time (NULL));
 //            cout << newracer->check(flight->x, flight->z, flight->y, speed, time (NULL)) << endl;
             // FIXME: USE TRY/CATCH WITH DICO !!!
+            if (d > 0)
+            {
+                printf ("check %d at time=%d\n", racers[flight->ID]->nextCP(), time(NULL));
+                tmessage* mess2 = (tmessage*)malloc(sizeof(*mess2));
+                mess2->u = 0;
+                mess2->message = (char*)malloc(200);
+                sprintf (mess2->message, "%s went trougth gate %d at %.2f kt", racers[flight->ID]->name().c_str(), racers[flight->ID]->nextCP(), speed);
+                s.sendsYS(packtmessage(mess2));
+                printf ("speed: %fkt  - time: %.0f\n", speed, time(NULL));
+                if ( (racers[flight->ID]->nextCP()) == 1 && (speed>200) )
+                {
+                    tmessage* mess3 = (tmessage*)malloc(sizeof(*mess3));
+                    mess3->u = 0;
+                    mess3->message = (char*)malloc(200);
+                    sprintf (mess3->message, "2s penalty for %s, you had to go below 200kt at the first gate!", racers[flight->ID]->name().c_str());
+                    s.sendsYS(packtmessage(mess3));
+                    printf("2s penalty!!\n");
+                }
+            }
             if (d == -1)
             {
                     cout  <<racers[flight->ID]->name() << " missed a check-point !" << endl;
@@ -133,29 +152,13 @@ int YSclient::aflight(tflight* flight, tflight2* flight2)
                 tmessage* mess = (tmessage*)malloc(sizeof(*mess));
                 mess->u = 0;
                 mess->message = (char*)malloc(300);
-                sprintf (mess->message, "%s finished in %d s ; Top speed %d kt", racers[flight->ID]->name().c_str(), (int)racers[flight->ID]->time(), racers[flight->ID]->topSpeed());
+
+                sprintf (mess->message, "%s finished in %.2f s ; Top speed %d kt", racers[flight->ID]->name().c_str(), racers[flight->ID]->time(), racers[flight->ID]->topSpeed());
+
                 s.sendsYS(packtmessage(mess));
                 cout << racers[flight->ID]->name() << " finished the race in " <<  racers[flight->ID]->time() << "s ; Top speed: "<< racers[flight->ID]->topSpeed() << "kt" << endl;
             }
-            if (d > 0)
-            {
-                printf ("check %d at time=%d\n", racers[flight->ID]->nextCP(), time(NULL));
-                tmessage* mess2 = (tmessage*)malloc(sizeof(*mess2));
-                mess2->u = 0;
-                mess2->message = (char*)malloc(200);
-                sprintf (mess2->message, "%s went trougth gate %d at %f kt", racers[flight->ID]->name().c_str(), racers[flight->ID]->nextCP(), speed);
-                s.sendsYS(packtmessage(mess2));
-                printf ("speed: %fkt \n", speed);
-                if ( (racers[flight->ID]->nextCP()) == 1 && (speed>200) )
-                {
-                    tmessage* mess3 = (tmessage*)malloc(sizeof(*mess3));
-                    mess3->u = 0;
-                    mess3->message = (char*)malloc(200);
-                    sprintf (mess3->message, "2s penalty for %s, you had to go below 200kt at the first gate!", racers[flight->ID]->name().c_str());
-                    s.sendsYS(packtmessage(mess3));
-                    printf("2s penalty!!\n");
-                }
-            }
+            
 //            cout << clock() << endl;
         }
     }
@@ -196,7 +199,7 @@ int YSclient::aground(tground* ground)
     {
         printf("PLAYERJOIN %s %s type: %d iff: %d id:%d\n", ground->name2, ground->name, ground->type, ground->iff, ground->id);
         ack.id=0;
-        racers[ground->id] = new Racer(ground->name2, ground->name, 1, cp);
+        racers[ground->id] = new Racer(ground->name2, ground->name, laps, cp);
     }
     ack.info = ground->id;
     return s.sendsYS(packtacknowledge(&ack));
@@ -214,7 +217,7 @@ int YSclient::aleft(tleft* left, int is_ground=0)
         mess2->u = 0;
         mess2->message = (char*)malloc(200);
         sprintf (mess2->message, "Object %d was hit, 2s penalty?", left->id);
-        s.sendsYS(packtmessage(mess2));
+        //s.sendsYS(packtmessage(mess2));
         printf("2s penalty for pylon hit!!\n");
         //xmlLog->log() << "<groundLeft id='"<< left->id <<"' />" << endl;
     }

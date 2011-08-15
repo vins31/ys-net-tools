@@ -10,9 +10,11 @@
 
 using namespace std;
 
-YSclient::YSclient(char* checkpoints_file)
+
+YSclient::YSclient(char* checkpoints_file, int laps)
 {
-     cp = read_file(checkpoints_file); //manque un new ?
+     cp   = read_file(checkpoints_file); //manque un new ?
+     this->laps = laps;
 //     cout << *cp  << std::endl;
 //     Racer newracer("Vins", "f-16", 2, cp);
 //     cout << "Done!" << endl;

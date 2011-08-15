@@ -16,7 +16,7 @@
 class YSclient //: public Apps
 {
     public:
-        YSclient(char* checkpoints_file);
+        YSclient(char* checkpoints_file, int laps);
         void connect();
 
     protected:
@@ -29,6 +29,7 @@ class YSclient //: public Apps
 
     private:
         SocketYS s;
+        int laps;
         int alogin(tlogin* login);
         int amap(tmap* map);
         int aysversion(tint* inte);
