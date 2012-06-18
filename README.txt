@@ -13,5 +13,7 @@ Python version of the library : https://bitbucket.org/vincentweb/ysf/src/87b3657
 
 Old PHP version of the library (used in the server list website) : http://pastebin.com/2TFqyjpU
 
+Checkpoint check (lib requiered for ysrace) : http://github.com/vins31/checkpoint_check
+
 Documentation of YSFlight protocol : https://bitbucket.org/vincentweb/ys_proto/src/c27b70c06b32/doc/latex
 
