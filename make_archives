@@ -28,7 +28,7 @@ tar czvf builds/ys-sndmsg32.tar.gz builds/ys-sndmsg32 builds/lib/lib_ys_proto32.
 
 echo "     ys-netlog"
 cp netlog/README.txt builds/
-tar czvf builds/ys-netlogWin32.tar.gz builds/ys-sndmsg.exe builds/*.dll builds/README.txt
+tar czvf builds/ys-netlogWin32.tar.gz builds/netlog.exe builds/*.dll builds/README.txt
 
 tar czvf builds/ys-netlog.tar.gz builds/netlog builds/lib/lib_ys_proto.so builds/README.txt
 
